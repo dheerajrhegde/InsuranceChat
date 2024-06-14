@@ -84,7 +84,7 @@ else:
 
     # customer_name has the name of the logged in user
     # token has the bearer token to use with APIs
-    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/CarePlan"
+    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/CarePlan?patient={identifier}"
     st.write(url)
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
