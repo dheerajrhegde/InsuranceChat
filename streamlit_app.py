@@ -70,6 +70,7 @@ else:
     url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
+    st.write(data)
     user_id = data["parameter"][0]["valueString"]
 
     headers = {"Authorization":
