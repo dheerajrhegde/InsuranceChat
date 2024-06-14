@@ -5,7 +5,7 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
 import operator
-
+from tavily import TavilyClient
 
 class SubscriberOrBeneficiarySearch(BaseModel):
     token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
@@ -36,6 +36,37 @@ def get_coverage_details(token, identifier):
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
     return data
+
+
+class SearchInput(BaseModel):
+    query: str = Field(description="should be a search query")
+
+client = TavilyClient(os.getenv("TAVILY_API_KEY"))
+
+@tool(args_schema=SearchInput)
+def get_help(query):
+    """Does a search to get detailed instructions/help based on user query"""
+    content = client.search(query, search_depth="advanced")["results"]
+
+    # setup prompt
+    prompt = [{
+        "role": "system",
+        "content": f'You are an AI research assistant. ' \
+                   f'Your sole purpose is to provide a steps to setup instructions for user query'
+    }, {
+        "role": "user",
+        "content": f'Information: """{content}"""\n\n' \
+                   f'Using the above information, answer the following' \
+                   f'query: "{query}" as a series if setps to take --' \
+        }]
+
+    # run gpt-4
+    lc_messages = convert_openai_messages(prompt)
+    report = ChatOpenAI(model='gpt-4o', openai_api_key=os.getenv("OPENAI_API_KEY")).invoke(lc_messages).content
+
+    # print report
+    return report
+
 
 class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], operator.add]
