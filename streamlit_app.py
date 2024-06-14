@@ -70,20 +70,25 @@ else:
     url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
-    st.write(data)
+    #st.write(data)
     user_id = data["parameter"][0]["valueString"]
 
     headers = {"Authorization":
                    f"Bearer {token}"
                }
     url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/Patient?_id={user_id}"
-    st.write(url)
+    #st.write(url)
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
     #st.write(data)
     customer_name = data["entry"][0]["resource"]["name"][0]["given"][0]
     identifier = data["entry"][0]["resource"]["id"]
 
+    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/Patient/{identifier}"
+    st.write(url)
+    jsonString = requests.get(url, headers=headers)
+    data = json.loads(jsonString.content)
+    st.write(data)
 
     # customer_name has the name of the logged in user
     # token has the bearer token to use with APIs
