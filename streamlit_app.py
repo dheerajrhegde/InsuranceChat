@@ -17,6 +17,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+
+def add_message(user, text):
+    st.session_state["user_queries"].append({
+        "user": user,
+        "text": text,
+        "time": datetime.datetime.now().strftime("%H:%M:%S")
+    })
+
+
+# Function to display chat messages
+def display_messages():
+    for message in st.session_state["user_queries"][::-1]:
+        st.write(f"[{message['time']}] {message['user']}: {message['text']}")
+
 markdown="""
 ### Overview
 
@@ -98,31 +112,9 @@ else:
 
     tool = [tools.get_person_details]
     model = ChatOpenAI(model="gpt-4o")
-    abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
+    if "abot" not in st.session_state:
+        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
 
-    messages = [HumanMessage(content="Tell me about the plan I have")]
-    result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # Initialize session state to store chat messages
-    if "user_queries" not in st.session_state:
-        st.session_state["user_queries"] = []
-        st.session_state["abot"] = abot
-        st.session_state["thread"] = {"configurable": {"thread_id": "1"}}
-
-
-    # Function to add a new message to the chat
     def add_message(user, text):
         st.session_state["user_queries"].append({
             "user": user,
@@ -130,14 +122,13 @@ else:
             "time": datetime.datetime.now().strftime("%H:%M:%S")
         })
 
-
     # Function to display chat messages
     def display_messages():
         for message in st.session_state["user_queries"][::-1]:
             st.write(f"[{message['time']}] {message['user']}: {message['text']}")
 
     # Title of the app
-    st.title("Service Desk Chat Application")
+    st.title("Customer InsurAssist")
 
     st.session_state.col1, st.session_state.col2, st.session_state.col3 = st.columns([0.3, 0.2, 0.5])
     with st.session_state.col1:
@@ -145,9 +136,12 @@ else:
     # Input form for sending a new message
     with st.session_state.col2:
         with st.form("message_form", clear_on_submit=True):
-            user = st.text_input("Your name", key="name", max_chars=50, value=data["entry"][0]["resource"]["name"][0]["given"][0])
+            user = st.text_input("Your name", key="name", max_chars=50,
+                                 value=data["entry"][0]["resource"]["name"][0]["given"][0])
             user_query = st.text_input("Message", key="user_query", max_chars=500)
+            send_image = st.file_uploader("Choose a file")
             send_button = st.form_submit_button("Send")
+
             if send_button and user_query:
                 messages = [HumanMessage(content=user_query)]
                 result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
