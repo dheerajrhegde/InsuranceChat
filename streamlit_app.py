@@ -108,7 +108,7 @@ else:
     
     Calling customer's name is {customer_name}
     Calling customer's identifier is {identifier}
-    
+    Additional customer information available in {data}
     Token for the API is {token}
     """
 
