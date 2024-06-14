@@ -114,6 +114,11 @@ else:
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
         st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
+        st.session_state.thread = {"configurable": {"thread_id": "1"}}
+
+    if "user_queries" not in st.session_state:
+        st.session_state["user_queries"] = []
+
 
     def add_message(user, text):
         st.session_state["user_queries"].append({
