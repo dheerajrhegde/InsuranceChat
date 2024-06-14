@@ -98,7 +98,7 @@ else:
 
     tool = [tools.get_person_details]
     model = ChatOpenAI(model="gpt-4o")
-    abot = tool.Agent(model, tool, system=prompt, checkpointer=memory)
+    abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
 
     messages = [HumanMessage(content="Tell me about the plan I have")]
     result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
