@@ -89,7 +89,7 @@ else:
     customer_name = data["entry"][0]["resource"]["name"][0]["given"][0]
     identifier = data["entry"][0]["resource"]["id"]
 
-    prompt = """
+    prompt = f"""
     You are a very polite customer care agent. You have acccess to certain
     tools that help you get information about 
     - Subscriber or Beneficiary
