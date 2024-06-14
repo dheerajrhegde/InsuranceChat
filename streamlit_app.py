@@ -65,6 +65,7 @@ else:
     headers = {"Authorization":
                    f"Bearer {token}"
                }
+    st.write(token)
     # url = "https://fhir.cigna.com/PatientAccess/v1/$userinfo"
     url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
     jsonString = requests.get(url, headers=headers)
