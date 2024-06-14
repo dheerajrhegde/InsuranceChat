@@ -70,7 +70,7 @@ else:
     headers = {"Authorization":
                    f"Bearer {token}"
                }
-    st.write(token)
+    #st.write(token)
     # url = "https://fhir.cigna.com/PatientAccess/v1/$userinfo"
     url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
     jsonString = requests.get(url, headers=headers)
@@ -113,6 +113,7 @@ else:
     """
 
     tool = [tools.get_person_details, tools.get_coverage_details, tools.tavily_tool]
+
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
         st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
