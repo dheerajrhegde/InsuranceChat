@@ -28,7 +28,7 @@ class CoverageDetails(BaseModel):
 
 @tool(args_schema=CoverageDetails)
 def get_coverage_details(token, identifier):
-    """Get coverage / benefits details based on the identifier provided"""
+    """Get coverage / benefits details based on the identifier provided."""
     headers = {"Authorization":
                    f"Bearer {token}"
                }

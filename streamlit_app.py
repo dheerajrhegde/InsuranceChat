@@ -115,7 +115,7 @@ else:
     tool = [tools.get_person_details, tools.get_coverage_details]
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
-        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory, verbose=True)
+        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
         st.session_state.thread = {"configurable": {"thread_id": "1"}}
 
     if "user_queries" not in st.session_state:
