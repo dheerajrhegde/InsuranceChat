@@ -141,7 +141,7 @@ else:
     # Input form for sending a new message
     with st.session_state.col2:
         st.write("test")
-        """with st.form("message_form", clear_on_submit=True):
+        with st.form("message_form", clear_on_submit=True):
             user = st.text_input("Your name", key="name", max_chars=50,
                                  value=data["entry"][0]["resource"]["name"][0]["given"][0])
             user_query = st.text_input("Message", key="user_query", max_chars=500)
@@ -150,7 +150,7 @@ else:
             if send_button and user_query:
                 messages = [HumanMessage(content=user_query)]
                 result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
-                add_message("agent", result['messages'][-1].content)"""
+                add_message("agent", result['messages'][-1].content)
 
     with st.session_state.col3:
         # Display the chat messages
