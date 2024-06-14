@@ -108,6 +108,8 @@ else:
     
     Calling customer's name is {customer_name}
     Calling customer's identifier is {identifier}
+    
+    Token for the API is {token}
     """
 
     tool = [tools.get_person_details]
