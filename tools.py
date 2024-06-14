@@ -8,6 +8,9 @@ import operator
 from tavily import TavilyClient
 from langchain.adapters.openai import convert_openai_messages
 from langchain_openai import ChatOpenAI
+from langchain_community.tools.tavily_search import TavilySearchResults
+
+tavily_tool = TavilySearchResults(max_results=4) #increased number of results
 
 class SubscriberOrBeneficiarySearch(BaseModel):
     token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
@@ -107,6 +110,7 @@ class Agent:
             # print(f"Calling: {t}")
             result = self.tools[t['name']].invoke(t['args'])
             results.append(ToolMessage(tool_call_id=t['id'], name=t['name'], content=str(result)))
+
         # print("Back to the model!")
         return {'messages': results}
 
