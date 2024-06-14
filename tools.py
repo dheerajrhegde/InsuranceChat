@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, os
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.agents import tool
 from langgraph.graph import StateGraph, END
