@@ -115,7 +115,7 @@ else:
     tool = [tools.get_person_details]
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
-        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
+        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory, verbose=True)
         st.session_state.thread = {"configurable": {"thread_id": "1"}}
 
     if "user_queries" not in st.session_state:
@@ -151,7 +151,7 @@ else:
 
             if send_button and user_query:
                 messages = [HumanMessage(content=user_query)]
-                result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread,verbose=True)
+                result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
                 add_message("agent", result['messages'][-1].content)
 
     with st.session_state.col3:
