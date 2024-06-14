@@ -13,6 +13,7 @@ class SubscriberOrBeneficiarySearch(BaseModel):
 
 @tool(args_schema=SubscriberOrBeneficiarySearch)
 def get_person_details(token, identifier):
+    """Get subscriber or beneficiary details based on the identifier provided"""
     headers = {"Authorization":
                    f"Bearer {token}"
                }
@@ -27,6 +28,7 @@ class CoverageDetails(BaseModel):
 
 @tool(args_schema=CoverageDetails)
 def get_coverage_details(token, identifier):
+    """Get coverage / benefits details based on the identifier provided"""
     headers = {"Authorization":
                    f"Bearer {token}"
                }
