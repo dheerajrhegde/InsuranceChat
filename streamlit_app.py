@@ -151,7 +151,7 @@ else:
 
             if send_button and user_query:
                 messages = [HumanMessage(content=user_query)]
-                result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
+                result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread,verbose=True)
                 add_message("agent", result['messages'][-1].content)
 
     with st.session_state.col3:
