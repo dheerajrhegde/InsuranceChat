@@ -6,6 +6,8 @@ from typing import TypedDict, Annotated
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
 import operator
 from tavily import TavilyClient
+from langchain.adapters.openai import convert_openai_messages
+from langchain_openai import ChatOpenAI
 
 class SubscriberOrBeneficiarySearch(BaseModel):
     token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
