@@ -25,7 +25,13 @@ def get_doctors(zip_code: str) -> list:
     url = "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=" + zip_code
     jsonString = requests.get(url)
     data = json.loads(jsonString.content)
-    return data
+    addresses = []
+    data = data['entry']
+    for entry in data:
+        address = entry['resource']['address']['line']
+        addresses = addresses + address
+
+    return addresses
 
 
 class SubscriberOrBeneficiarySearch(BaseModel):
