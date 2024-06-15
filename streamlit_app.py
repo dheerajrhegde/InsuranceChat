@@ -4,7 +4,7 @@ from langchain_core.messages import HumanMessage
 import streamlit as st
 from streamlit_oauth import OAuth2Component
 from langchain_openai import ChatOpenAI
-import tools
+import tools, uuid
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 memory = SqliteSaver.from_conn_string(":memory:")
@@ -115,12 +115,13 @@ else:
     Token for the API is {token}
     """
 
-    tool = [tools.get_person_details, tools.get_coverage_details, tools.get_plan_information]
+    tool = [tools.get_person_details, tools.get_coverage_details, tools.get_plan_information,
+            tools.get_explanation_of_benefit, tools.get_encounters, tools.get_doctors]
 
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
         st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
-        st.session_state.thread = {"configurable": {"thread_id": "1"}}
+        st.session_state.thread = {"configurable": {"thread_id": uuid.uuid4() }}
 
     if "user_queries" not in st.session_state:
         st.session_state["user_queries"] = []

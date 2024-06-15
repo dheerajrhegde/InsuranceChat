@@ -4,7 +4,6 @@ from langchain.agents import tool
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
-import operator
 from tavily import TavilyClient
 from langchain.adapters.openai import convert_openai_messages
 from langchain_openai import ChatOpenAI
@@ -13,8 +12,22 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.retrievers.self_query.base import SelfQueryRetriever
+import operator
 
 tavily_tool = TavilySearchResults(max_results=4) #increased number of results
+
+class DoctorSearch(BaseModel):
+    zip_code: str = Field(..., description="Zip code in which to search for doctors")
+
+@tool(args_schema=DoctorSearch)
+def get_doctors(zip_code: str) -> list:
+    """Get doctors for the given zip code"""
+    url = "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=" + zip_code
+    jsonString = requests.get(url)
+    addresses = []
+    data = json.loads(jsonString.content)
+    return data
+
 
 class SubscriberOrBeneficiarySearch(BaseModel):
     token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
@@ -46,6 +59,38 @@ def get_coverage_details(token, identifier):
     data = json.loads(jsonString.content)
     return data
 
+
+class Encounters(BaseModel):
+    token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
+    identifier: str = Field(..., description="Identifier of the subscriber. Example is ifp-8972693f-069b-4714-82f9-f805ebf7800f")
+
+@tool(args_schema=Encounters)
+def get_encounters(token, identifier):
+    """Get a list of interaction between a patient and healthcare provider(s) \
+    for the purpose of providing healthcare service(s) or assessing the health status of a patient."""
+    headers = {"Authorization":
+                   f"Bearer {token}"
+               }
+    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/Encounter?patient={identifier}"
+    jsonString = requests.get(url, headers=headers)
+    data = json.loads(jsonString.content)
+    return data
+
+class ExplanationOfBenefit(BaseModel):
+    token: str = Field(..., description="Bearer token to use for invoking CIGNA APIs")
+    identifier: str = Field(..., description="Identifier of the subscriber. Example is ifp-8972693f-069b-4714-82f9-f805ebf7800f")
+
+@tool(args_schema=ExplanationOfBenefit)
+def get_explanation_of_benefit(token, identifier):
+    """Get all claim details; adjudication details from the processing of a Claim; and \
+    optionally account balance information, for informing the subscriber of the benefits provided."""
+    headers = {"Authorization":
+                   f"Bearer {token}"
+               }
+    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/ExplanationOfBenefit?patient={identifier}"
+    jsonString = requests.get(url, headers=headers)
+    data = json.loads(jsonString.content)
+    return data
 
 class SearchInput(BaseModel):
     query: str = Field(description="should be a search query")
@@ -123,7 +168,7 @@ class RAG:
 
         index_name = "insuranceplans"
         embeddings = OpenAIEmbeddings()
-        vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
+        self.vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
 
         metadata_field_info = [
             AttributeInfo(
@@ -140,11 +185,12 @@ class RAG:
             llm=model,
             document_contents=document_content_description,
             metadata_field_info=metadata_field_info,
-            vectorstore=vectorstore,
+            vectorstore=self.vectorstore,
             verbose=False
         )
     def get_relevant_documents(self, query):
-        return self.retriever.get_relevant_documents(query)
+        #return self.retriever.get_relevant_documents(query)
+        return self.vectorstore.as_retriever().get_relevant_documents(query)
 
 
 class PlanInformation(BaseModel):

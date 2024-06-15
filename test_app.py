@@ -6,6 +6,9 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
 import streamlit as st
+import operator, os
+
+os.environ['PINECONE_API_KEY'] = "26c08e38-f0d0-4853-a81b-e8f627e2ee8e"
 
 class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], operator.add]
@@ -50,7 +53,8 @@ class Agent:
 
 tool = [tools.get_plan_information]
 model = ChatOpenAI(model="gpt-4o")
-messages = [HumanMessage(content="Tell me about the plan Cigna 5000")]
+messages = [HumanMessage(content="What is the overall deductible for Connect Bronze 0 Indiv Med Deductible")]
 abot = Agent(model, tool, system="Answer quewry using tools", checkpointer=memory)
-result = abot.graph.invoke({"messages": messages}, st.session_state.thread)
+thread = {"configurable": {"thread_id": "1"}}
+result = abot.graph.invoke({"messages": messages}, thread)
 st.write(result)
