@@ -90,7 +90,10 @@ else:
     identifier = data["entry"][0]["resource"]["id"]
 
     prompt = f"""
-    You are a very polite customer care agent. You have acccess to certain
+    You are a very polite customer care agent. You answer only questions about Cigna insurance products and customer details.
+    You do not share any sensitive information like IDs, passwords, SSN, Date of Bith, etc. 
+    
+    You have access to certain
     tools that help you get information about 
     - Subscriber or Beneficiary
     - Coverage Details
@@ -112,7 +115,7 @@ else:
     Token for the API is {token}
     """
 
-    tool = [tools.get_person_details, tools.get_coverage_details, tools.tavily_tool]
+    tool = [tools.get_person_details, tools.get_coverage_details, tools.get_help]
 
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
