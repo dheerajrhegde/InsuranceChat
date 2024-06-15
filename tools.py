@@ -143,7 +143,7 @@ class RAG:
             vectorstore=vectorstore,
             verbose=False
         )
-    def get_relevant_doduments(self, query):
+    def get_relevant_documents(self, query):
         return self.retriever.get_relevant_documents(query)
 
 
@@ -157,5 +157,5 @@ def get_plan_information(question: str) -> str:
     RAG chain created on plan documents
     """
     chain = RAG()
-    return chain.get_relevant_doduments(question)
+    return chain.get_relevant_documents(question)
 

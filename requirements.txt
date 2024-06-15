@@ -8,3 +8,4 @@ streamlit
 streamlit-oauth
 unstructured
 langchain-pinecone
+lark
