@@ -7,3 +7,4 @@ langchain-community
 streamlit
 streamlit-oauth
 unstructured
+langchain-pinecone

@@ -9,6 +9,10 @@ from tavily import TavilyClient
 from langchain.adapters.openai import convert_openai_messages
 from langchain_openai import ChatOpenAI
 from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain.embeddings import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain.chains.query_constructor.base import AttributeInfo
+from langchain.retrievers.self_query.base import SelfQueryRetriever
 
 tavily_tool = TavilySearchResults(max_results=4) #increased number of results
 
@@ -114,5 +118,44 @@ class Agent:
         # print("Back to the model!")
         return {'messages': results}
 
+class RAG:
+    def __init__(self):
 
+        index_name = "insuranceplans"
+        embeddings = OpenAIEmbeddings()
+        vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
+
+        metadata_field_info = [
+            AttributeInfo(
+                name="filename",
+                description="The file the chunk is from. Is also the plan name",
+                type="string",
+            ),
+        ]
+
+        document_content_description = "Cigna Plan Information"
+        model = ChatOpenAI(model="gpt-4o", temperature=0)
+
+        self.retriever = SelfQueryRetriever.from_llm(
+            llm=model,
+            document_contents=document_content_description,
+            metadata_field_info=metadata_field_info,
+            vectorstore=vectorstore,
+            verbose=False
+        )
+    def get_relevant_doduments(self, query):
+        return self.retriever.get_relevant_documents(query)
+
+
+class PlanInformation(BaseModel):
+    question: str = Field(..., description="The query to answer on the given plan_name")
+
+@tool(args_schema=PlanInformation)
+def get_plan_information(question: str) -> str:
+    """
+    Will take the plan_name and the question from the user and answer the question using
+    RAG chain created on plan documents
+    """
+    chain = RAG()
+    return chain.get_relevant_doduments(question)
 

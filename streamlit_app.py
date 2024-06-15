@@ -115,7 +115,7 @@ else:
     Token for the API is {token}
     """
 
-    tool = [tools.get_person_details, tools.get_coverage_details, tools.get_help]
+    tool = [tools.get_person_details, tools.get_coverage_details, tools.get_plan_information]
 
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
