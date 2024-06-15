@@ -8,4 +8,4 @@ streamlit
 streamlit-oauth
 unstructured
 langchain-pinecone
-lark
+lark==1.1.9
