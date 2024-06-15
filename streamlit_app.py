@@ -77,7 +77,7 @@ else:
     data = json.loads(jsonString.content)
     #st.write(data)
     user_id = data["parameter"][0]["valueString"]
-    st.write(token)
+
     headers = {"Authorization":
                    f"Bearer {token}"
                }
