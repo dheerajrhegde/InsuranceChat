@@ -154,6 +154,8 @@ else:
             user_query = st.text_input("Message", key="user_query", max_chars=500)
             send_button = st.form_submit_button("Send")
 
+            add_message(customer_name, user_query)
+
             if send_button and user_query:
                 messages = [HumanMessage(content=user_query)]
                 result = st.session_state.abot.graph.invoke({"messages": messages}, st.session_state.thread)
