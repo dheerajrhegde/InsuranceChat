@@ -24,7 +24,6 @@ def get_doctors(zip_code: str) -> list:
     """Get doctors for the given zip code"""
     url = "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=" + zip_code
     jsonString = requests.get(url)
-    addresses = []
     data = json.loads(jsonString.content)
     return data
 
