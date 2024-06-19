@@ -17,8 +17,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-
 def add_message(user, text):
+    """
+    Adds a new message to the session state.
+
+    Args:
+        user (str): The user who sent the message.
+        text (str): The text message sent by the user.
+    """
     st.session_state["user_queries"].append({
         "user": user,
         "text": text,
@@ -28,10 +34,15 @@ def add_message(user, text):
 
 # Function to display chat messages
 def display_messages():
+    """
+    Displays chat messages stored in session state.
+
+    Messages are displayed in reverse order (most recent first).
+    """
     for message in st.session_state["user_queries"][::-1]:
         st.write(f"[{message['time']}] {message['user']}: {message['text']}")
 
-markdown="""
+markdown = """
 ### Overview
 
 
@@ -52,32 +63,36 @@ REDIRECT_URI = "https://dheeraj-insurancechat.streamlit.app/"
 SCOPE = "openid fhirUser patient/*.read"
 
 if 'token' not in st.session_state:
-  result = oauth2.authorize_button(
-      name="Continue with Cigna",
-      icon="https://www.google.com.tw/favicon.ico",
-      redirect_uri=REDIRECT_URI,
-      scope=SCOPE,
-      key="cigna",
-      extras_params={"prompt": "consent", "access_type": "offline"},
-      use_container_width=True,
-      pkce='S256',
-  )
-  if result:
-    st.session_state.token = result.get('token')
-    st.rerun()
+    # Authenticate using Cigna authorization API
+    result = oauth2.authorize_button(
+        name="Continue with Cigna",
+        icon="https://www.google.com.tw/favicon.ico",
+        redirect_uri=REDIRECT_URI,
+        scope=SCOPE,
+        key="cigna",
+        extras_params={"prompt": "consent", "access_type": "offline"},
+        use_container_width=True,
+        pkce='S256',
+    )
+    if result:
+        # Rerun the app to get the token and display the UI components
+        # Done only whenn token is retrived
+        st.session_state.token = result.get('token')
+        st.rerun()
 else:
     token = st.session_state.token["access_token"]
     headers = {"Authorization":
                    f"Bearer {token}"
                }
-    #st.write(token)
-    # url = "https://fhir.cigna.com/PatientAccess/v1/$userinfo"
+
+    # Get user identifier
     url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
     #st.write(data)
     user_id = data["parameter"][0]["valueString"]
 
+    # Get user details
     headers = {"Authorization":
                    f"Bearer {token}"
                }
@@ -126,25 +141,17 @@ else:
     if "user_queries" not in st.session_state:
         st.session_state["user_queries"] = []
 
-
-    def add_message(user, text):
-        st.session_state["user_queries"].append({
-            "user": user,
-            "text": text,
-            "time": datetime.datetime.now().strftime("%H:%M:%S")
-        })
-
-    # Function to display chat messages
-    def display_messages():
-        for message in st.session_state["user_queries"][::-1]:
-            st.write(f"[{message['time']}] {message['user']}: {message['text']}")
-
     # Title of the app
     st.title("Customer InsurAssist")
 
+    # create 3 columns to organize the UI
+    # col1: markdown content describing the app
+    # col2: input form for sending a new message
+    # col3: chat messages from user and the model
     st.session_state.col1, st.session_state.col2, st.session_state.col3 = st.columns([0.3, 0.2, 0.5])
     with st.session_state.col1:
         st.markdown(markdown)
+
     # Input form for sending a new message
     with st.session_state.col2:
         st.write("test")

@@ -35,6 +35,7 @@ model = ChatOpenAI(model="gpt-4o")
     id_key=id_key,
 )"""
 
+# Creating a SelfQueryRetriever instance using the ChatOpenAI model and other specified parameters
 retriever = SelfQueryRetriever.from_llm(
     llm=model,
     document_contents=document_content_description,
@@ -57,7 +58,8 @@ template = """
         """
 prompt = ChatPromptTemplate.from_template(template)
 
-# RAG pipeline
+
+# RAG (Retrieval-Augmented Generation) pipeline for answering questions
 chain = RunnableParallel(
     {
         'context': lambda x: retriever.get_relevant_documents(x["query"]),
@@ -66,6 +68,8 @@ chain = RunnableParallel(
     }) | prompt | model | StrOutputParser()
 
 print("invoking chain")
+
+# Invoking the pipeline to answer a specific query related to coverage for having a baby
 response = chain.invoke(
     {
         "query": "What is the coverage for having a baby?",
@@ -75,6 +79,7 @@ response = chain.invoke(
 print(response)
 
 print("invoking chain")
+# Invoking the pipeline to find the plan that provides the best coverage for having a baby
 response = chain.invoke(
     {
         "query": "Which plan provides the best coverage for having a baby?",

@@ -30,7 +30,6 @@ def get_doctors(zip_code: str) -> list:
     for entry in data:
         address = entry['resource']['address']['line']
         addresses = addresses + address
-
     return addresses
 
 

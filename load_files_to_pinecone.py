@@ -11,8 +11,6 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
-
-
 index_name = "insuranceplans"
 
 # Path to save images
@@ -20,6 +18,8 @@ path = "./cigna/"
 import os
 files = os.listdir("./cigna")
 raw_pdf_elements = []
+
+# Loop through each file in the directory to partition PDFs
 for file in files:
     print("Starting with file", file)
     if file != ".DS_Store":
@@ -68,6 +68,7 @@ retriever = SelfQueryRetriever.from_llm(
     verbose=True
 )
 
+# Processing each raw PDF element and adding it to the vectorstore
 for e in raw_pdf_elements:
     d = Document(page_content=e.text, metadata=e.metadata.to_dict())
     print(e.id)
