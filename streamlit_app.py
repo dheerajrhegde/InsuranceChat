@@ -100,7 +100,7 @@ else:
     #st.write(url)
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
-    #st.write(data)
+    st.write(data)
     customer_name = data["entry"][0]["resource"]["name"][0]["given"][0]
     identifier = data["entry"][0]["resource"]["id"]
 
