@@ -99,7 +99,7 @@ else:
     url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/Patient?_id={user_id}"
     #st.write(url)
     jsonString = requests.get(url, headers=headers)
-    print(jsonString)
+    st.write(jsonString)
     data = json.loads(jsonString.content)
     st.write(data)
     customer_name = data["entry"][0]["resource"]["name"][0]["given"][0]
