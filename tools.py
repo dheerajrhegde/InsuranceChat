@@ -91,7 +91,7 @@ def get_explanation_of_benefit(token, identifier):
     headers = {"Authorization":
                    f"Bearer {token}"
                }
-    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/ExplanationOfBenefitExplanationOfBenefit?patient={identifier}"
+    url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/ExplanationOfBenefit?patient={identifier}"
     jsonString = requests.get(url, headers=headers)
     data = json.loads(jsonString.content)
     return data
