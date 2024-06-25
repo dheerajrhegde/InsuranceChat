@@ -154,11 +154,10 @@ else:
 
     # Input form for sending a new message
     with st.session_state.col2:
-        st.write("test")
         with st.form("message_form", clear_on_submit=True):
             user = st.text_input("Your name", key="name", max_chars=50,
                                  value=data["entry"][0]["resource"]["name"][0]["given"][0])
-            user_query = st.text_input("Message", key="user_query", max_chars=500)
+            user_query = st.text_area("Message", key="user_query", max_chars=500, t)
             send_button = st.form_submit_button("Send")
 
             add_message(customer_name, user_query)
