@@ -1,18 +1,20 @@
 from requests_oauth2client import OAuth2Client, OAuth2ClientCredentialsAuth
-import os
+import os, requests
 import streamlit as st
 
+CLIENT_ID = os.environ.get("CIGNA_CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CIGNA_CLIENT_SECRET")
 
 oauth2client = OAuth2Client(
     token_endpoint="https://r-hi2.cigna.com/mga/sps/oauth/oauth20/token",
     authorization_endpoint="https://r-hi2.cigna.com/mga/sps/oauth/oauth20/authorize",
     redirect_uri="https://dheeraj-insurancechat.streamlit.app/",
     userinfo_endpoint="https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo",
-    client_id="658bc97e-bb97-41b6-8556-589d10cd7114",
-    client_secret="af4989b9-6f74-4f3a-a940-1ac22c35b2c4",
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
 )
 
-print(oauth2client)
+st.write(oauth2client)
 """auth = OAuth2ClientCredentialsAuth(
     oauth2client, scope="openid fhirUser patient/*.read"
 )
@@ -20,7 +22,7 @@ print(oauth2client)
 print(auth.token)"""
 
 az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
-print(az_request)
-import webbrowser
+st.write(az_request)
 
-webbrowser.open(az_request.uri)
+response = requests.post(az_request.url, data=az_request.body, headers=az_request.headers)
+st.write(response)
