@@ -25,7 +25,7 @@ st.write(st.query_params)
 token_url = "https://hi2.cigna.com/mga/sps/oauth/oauth20/token"
 body = {
     "grant_type": "authorization_code",
-    "code": "code-received-in-redirect-url",
+    "code": st.query_params["code"],
     "redirect_uri": "https://yourhealthapp.com://oauth",
     "client_id":CLIENT_ID,
     "client_secret":CLIENT_SECRET
