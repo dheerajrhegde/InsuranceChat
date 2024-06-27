@@ -30,6 +30,7 @@ body = {
     "client_id":CLIENT_ID,
     "client_secret":CLIENT_SECRET
 }
+st.write(body)
 response = requests.post(token_url, data=body)
 st.write(response.json())
 
