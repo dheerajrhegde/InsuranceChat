@@ -18,5 +18,6 @@ st.write(oauth2client)
 az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
 st.write(az_request.uri)
 
-response = requests.get(az_request.url)
-st.write(response)
+import webbrowser
+response = webbrowser.open(az_request.uri)
+print(response)
