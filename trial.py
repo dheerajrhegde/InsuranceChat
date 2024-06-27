@@ -23,11 +23,12 @@ st.write(st.session_state)
 st.write(st.query_params)
 
 token_url = "https://hi2.cigna.com/mga/sps/oauth/oauth20/token"
+
 body = {
     "grant_type": "authorization_code",
     "code": st.query_params["code"],
-    "redirect_uri": "https://trialpy.streamlit.app//oauth",
-    "client_id":CLIENT_ID,
+    "redirect_uri": "https://trialpy.streamlit.app/",
+    "client_id":"c1a8a601-bb22-4f1f-ab79-b2666e5008f2",
     "client_secret":CLIENT_SECRET
 }
 st.write("body to post is ...",body)
