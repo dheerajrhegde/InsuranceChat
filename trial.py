@@ -32,6 +32,6 @@ body = {
 }
 st.write("body to post is ...",body)
 response = requests.post(token_url, body)
-st.write(response.json())
+st.write(response.content)
 
 
