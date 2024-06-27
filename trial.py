@@ -1,6 +1,7 @@
 from requests_oauth2client import OAuth2Client, OAuth2ClientCredentialsAuth
 import os, requests
 import streamlit as st
+from streamlit_oauth import OAuth2Component
 
 CLIENT_ID = os.environ.get("CIGNA_CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CIGNA_CLIENT_SECRET")
