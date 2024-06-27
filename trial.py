@@ -18,6 +18,23 @@ st.write(oauth2client)
 az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
 st.write(az_request.uri)
 
-import webbrowser
-response = webbrowser.open(az_request.uri)
-print(response)
+
+AUTHORIZE_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/authorize"
+TOKEN_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/token"
+REVOKE_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/revoke"
+oauth2 = OAuth2Component(CLIENT_ID, CLIENT_SECRET, AUTHORIZE_ENDPOINT, TOKEN_ENDPOINT, REVOKE_ENDPOINT)
+REDIRECT_URI = "https://trialpy.streamlit.app/"
+SCOPE = "openid fhirUser patient/*.read"
+
+result = oauth2.authorize_button(
+        name="Continue with Cigna",
+        icon="https://www.google.com.tw/favicon.ico",
+        redirect_uri=REDIRECT_URI,
+        scope=SCOPE,
+        key="cigna",
+        extras_params={"prompt": "consent", "access_type": "offline"},
+        use_container_width=True,
+        pkce='S256',
+    )
+
+st.write(result.get('token'))
