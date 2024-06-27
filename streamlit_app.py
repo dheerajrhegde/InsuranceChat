@@ -57,8 +57,8 @@ CLIENT_ID = os.environ.get("CIGNA_CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CIGNA_CLIENT_SECRET")
 AUTHORIZE_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/authorize"
 TOKEN_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/token"
-REVOKE_ENDPOINT = "https://oauth2.googleapis.com/revoke"
-oauth2 = OAuth2Component(CLIENT_ID, CLIENT_SECRET, AUTHORIZE_ENDPOINT, TOKEN_ENDPOINT, TOKEN_ENDPOINT)
+REVOKE_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/revoke"
+oauth2 = OAuth2Component(CLIENT_ID, CLIENT_SECRET, AUTHORIZE_ENDPOINT, TOKEN_ENDPOINT, REVOKE_ENDPOINT)
 REDIRECT_URI = "https://dheeraj-insurancechat.streamlit.app/"
 SCOPE = "openid fhirUser patient/*.read"
 
@@ -70,7 +70,7 @@ if 'token' not in st.session_state:
         redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         key="cigna",
-        extras_params={"prompt": "consent", "access_type": "offline"},
+        #extras_params={"prompt": "consent", "access_type": "offline"},
         use_container_width=True,
         pkce='S256',
     )
