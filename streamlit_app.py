@@ -6,6 +6,7 @@ from streamlit_oauth import OAuth2Component
 from langchain_openai import ChatOpenAI
 import tools, uuid
 from langgraph.checkpoint.sqlite import SqliteSaver
+from requests_oauth2client import OAuth2Client
 
 memory = SqliteSaver.from_conn_string(":memory:")
 
@@ -64,16 +65,28 @@ SCOPE = "openid fhirUser patient/*.read"
 
 if 'token' not in st.session_state:
     # Authenticate using Cigna authorization API
-    result = oauth2.authorize_button(
+    """result = oauth2.authorize_button(
         name="Continue with Cigna",
         icon="https://www.google.com.tw/favicon.ico",
         redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         key="cigna",
-        #extras_params={"prompt": "consent", "access_type": "offline"},
+        extras_params={"prompt": "consent", "access_type": "offline"},
         use_container_width=True,
         pkce='S256',
+    )"""
+    oauth2client = OAuth2Client(
+        token_endpoint="https://r-hi2.cigna.com/mga/sps/oauth/oauth20/token",
+        authorization_endpoint="https://r-hi2.cigna.com/mga/sps/oauth/oauth20/authorize",
+        redirect_uri="https://dheeraj-insurancechat.streamlit.app/",
+        userinfo_endpoint="https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo",
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
     )
+
+    az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
+    result = requests.get(az_request.uri)
+
     if result:
         # Rerun the app to get the token and display the UI components
         # Done only whenn token is retrived

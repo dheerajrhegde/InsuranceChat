@@ -9,3 +9,5 @@ streamlit-oauth
 unstructured
 langchain-pinecone
 lark==1.1.9
+requests_oauth2client
+web-browser
