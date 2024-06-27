@@ -86,7 +86,7 @@ if 'token' not in st.session_state:
 
     az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
     result = requests.get(az_request.uri)
-    st.write(result)
+    st.write(result.content)
     if result:
         # Rerun the app to get the token and display the UI components
         # Done only whenn token is retrived
