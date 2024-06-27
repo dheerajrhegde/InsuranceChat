@@ -32,7 +32,7 @@ body = {
     "client_secret":CLIENT_SECRET
 }
 st.write("body to post is ...",body)
-response = requests.post(token_url, json=body)
+response = requests.post(token_url, data=json.dumps(body))
 st.write(response.content)
 
 
