@@ -57,6 +57,6 @@ user_id = data["parameter"][0]["valueString"]
 url = f"https://fhir.cigna.com/PatientAccess/v1-devportal/Patient?_id={user_id}"
 #st.write(url)
 jsonString = requests.get(url, headers=headers)
-st.write(jsonString)
+st.write(jsonString.headers)
 data = json.loads(jsonString.content)
 st.write(data)
