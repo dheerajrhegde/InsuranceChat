@@ -18,5 +18,5 @@ st.write(oauth2client)
 az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
 st.write(az_request.uri)
 
-response = requests.post(az_request.url, data=az_request.body, headers=az_request.headers)
+response = requests.post(az_request.url)
 st.write(response)
