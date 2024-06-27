@@ -40,7 +40,7 @@ result = oauth2.authorize_button(
 
 st.write(result.get('token'))
 
-token = st.session_state.token["access_token"]
+token = result.get("token")["access_token"]
 headers = {"Authorization":
                f"Bearer {token}"
            }
