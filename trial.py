@@ -15,12 +15,6 @@ oauth2client = OAuth2Client(
 )
 
 st.write(oauth2client)
-"""auth = OAuth2ClientCredentialsAuth(
-    oauth2client, scope="openid fhirUser patient/*.read"
-)
-
-print(auth.token)"""
-
 az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*.read")
 st.write(az_request)
 
