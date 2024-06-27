@@ -1,5 +1,5 @@
 from requests_oauth2client import OAuth2Client, OAuth2ClientCredentialsAuth
-import os, requests
+import os, requests, json
 import streamlit as st
 from streamlit_oauth import OAuth2Component
 
@@ -39,3 +39,16 @@ result = oauth2.authorize_button(
     )
 
 st.write(result.get('token'))
+
+token = st.session_state.token["access_token"]
+headers = {"Authorization":
+               f"Bearer {token}"
+           }
+
+# Get user identifier
+url = "https://fhir.cigna.com/PatientAccess/v1-devportal/$userinfo"
+jsonString = requests.get(url, headers=headers)
+data = json.loads(jsonString.content)
+st.write(token)
+st.write(data)
+user_id = data["parameter"][0]["valueString"]
