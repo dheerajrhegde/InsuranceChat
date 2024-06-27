@@ -27,8 +27,8 @@ body = {
     "grant_type": "authorization_code",
     "code": st.query_params["code"],
     "redirect_uri": "https://yourhealthapp.com://oauth",
-    "client_id":CLIENT_ID,
-    "client_secret":CLIENT_SECRET
+    "CLIENT_ID":CLIENT_ID,
+    "CLIENT_SECRET":CLIENT_SECRET
 }
 st.write("body to post is ...",body)
 response = requests.post(token_url, data=body)
