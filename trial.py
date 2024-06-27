@@ -20,6 +20,7 @@ az_request = oauth2client.authorization_request(scope="openid fhirUser patient/*
 st.write(az_request.uri)
 
 st.write(st.session_state)
+st.write(st.query_params)
 
 
 AUTHORIZE_ENDPOINT = "https://r-hi2.cigna.com/mga/sps/oauth/oauth20/authorize"
