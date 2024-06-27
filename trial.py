@@ -32,7 +32,7 @@ body = {
     "client_secret":CLIENT_SECRET
 }
 st.write("body to post is ...",body)
-response = requests.post(token_url, data=body, headers={"Content-Type": "application/x-www-form-urlencoded"})
+response = requests.post(token_url, data=body, headers={"Content-Type": "application/x-www-form-urlencoded", "client_id":CLIENT_ID})
 st.write(response.content)
 
 
