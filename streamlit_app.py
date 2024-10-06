@@ -139,7 +139,8 @@ else:
 
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
-        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
+        with SqliteSaver.from_conn_string(":memory:") as memory:
+            st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
         st.session_state.thread = {"configurable": {"thread_id": uuid.uuid4() }}
 
     if "user_queries" not in st.session_state:
