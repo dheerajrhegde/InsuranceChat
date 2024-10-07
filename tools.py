@@ -13,6 +13,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 import operator
+from langgraph.checkpoint.sqlite import SqliteSaver
 
 tavily_tool = TavilySearchResults(max_results=4) #increased number of results
 
