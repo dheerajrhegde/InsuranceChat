@@ -131,7 +131,7 @@ class AgentState(TypedDict):
 
 
 class Agent:
-    def __init__(self, model, tools, checkpointer, system=""):
+    def __init__(self, model, tools, system=""):
         self.system = system
         graph = StateGraph(AgentState)
         graph.add_node("llm", self.call_openai)
@@ -139,8 +139,8 @@ class Agent:
         graph.add_conditional_edges("llm", self.exists_action, {True: "action", False: END})
         graph.add_edge("action", "llm")
         graph.set_entry_point("llm")
-        memory = SqliteSaver.from_conn_string(":memory:")
-        self.graph = graph.compile(checkpointer=memory)
+        with SqliteSaver.from_conn_string(":memory:") as memory:
+            self.graph = graph.compile(checkpointer=memory)
         self.tools = {t.name: t for t in tools}
         self.model = model.bind_tools(tools)
 
