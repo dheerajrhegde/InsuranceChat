@@ -8,7 +8,7 @@ import tools, uuid
 from langgraph.checkpoint.sqlite import SqliteSaver
 from requests_oauth2client import OAuth2Client
 
-memory = SqliteSaver.from_conn_string(":memory:")
+#memory = SqliteSaver.from_conn_string(":memory:")
 
 # Set up the page configuration
 st.set_page_config(
@@ -139,7 +139,7 @@ else:
 
     model = ChatOpenAI(model="gpt-4o")
     if "abot" not in st.session_state:
-        st.session_state.abot = tools.Agent(model, tool, system=prompt, checkpointer=memory)
+        st.session_state.abot = tools.Agent(model, tool, system=prompt)
         st.session_state.thread = {"configurable": {"thread_id": uuid.uuid4() }}
 
     if "user_queries" not in st.session_state:
