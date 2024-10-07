@@ -14,6 +14,7 @@ from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 import operator
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.memory import MemorySaver
 
 tavily_tool = TavilySearchResults(max_results=4) #increased number of results
 
@@ -140,8 +141,9 @@ class Agent:
         graph.add_conditional_edges("llm", self.exists_action, {True: "action", False: END})
         graph.add_edge("action", "llm")
         graph.set_entry_point("llm")
-        memory = SqliteSaver.from_conn_string(":memory:")
-        self.graph = graph.compile(checkpointer=memory)
+        #memory = SqliteSaver.from_conn_string(":memory:")
+        checkpointer = MemorySaver()
+        self.graph = graph.compile(checkpointer=checkpointer)
         self.tools = {t.name: t for t in tools}
         self.model = model.bind_tools(tools)
 
