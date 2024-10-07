@@ -140,8 +140,8 @@ class Agent:
         graph.add_conditional_edges("llm", self.exists_action, {True: "action", False: END})
         graph.add_edge("action", "llm")
         graph.set_entry_point("llm")
-        with SqliteSaver.from_conn_string(":memory:") as memory:
-            self.graph = graph.compile(checkpointer=memory)
+        memory = SqliteSaver.from_conn_string(":memory:")
+        self.graph = graph.compile(checkpointer=memory)
         self.tools = {t.name: t for t in tools}
         self.model = model.bind_tools(tools)
 
